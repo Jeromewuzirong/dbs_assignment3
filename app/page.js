@@ -1,6 +1,6 @@
 "use client";
 
-import { useAssignments } from "./context/AssignmentContext";
+import { useAssignments, isOverdue } from "./context/AssignmentContext";
 import { useRouter } from "next/navigation";
 
 function daysUntil(dateStr) {
@@ -46,6 +46,9 @@ export default function Home() {
   const router = useRouter();
 
   const sorted = [...assignments].sort((a, b) => {
+    const aOverdue = isOverdue(a.dueDate, a.status) ? 0 : 1;
+    const bOverdue = isOverdue(b.dueDate, b.status) ? 0 : 1;
+    if (aOverdue !== bOverdue) return aOverdue - bOverdue;
     const aDone = a.status === "done" ? 1 : 0;
     const bDone = b.status === "done" ? 1 : 0;
     if (aDone !== bDone) return aDone - bDone;
@@ -107,39 +110,50 @@ export default function Home() {
             </tr>
           </thead>
           <tbody>
-            {sorted.map((a) => (
-              <tr
-                key={a.id}
-                onClick={() => router.push(`/assignment/${a.id}`)}
-                className="border-t border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
-              >
-                <td className="pl-4 pr-2 py-3" onClick={(e) => e.stopPropagation()}>
-                  <input
-                    type="checkbox"
-                    checked={a.status === "done"}
-                    onChange={(e) => toggleDone(e, a)}
-                    className="h-4 w-4 rounded border-gray-300 accent-gray-800 cursor-pointer"
-                  />
-                </td>
-                <td className={`px-3 py-3 font-medium ${a.status === "done" ? "line-through text-gray-400" : ""}`}>
-                  {a.title}
-                </td>
-                <td className="px-3 py-3 text-gray-600">{a.course}</td>
-                <td className={`px-3 py-3 ${dueDateColor(a.dueDate)}`}>
-                  {formatDate(a.dueDate)}
-                </td>
-                <td className="px-3 py-3">
-                  <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${priorityBadge[a.priority]}`}>
-                    {a.priority}
-                  </span>
-                </td>
-                <td className="px-3 py-3">
-                  <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${statusBadge[a.status]}`}>
-                    {statusLabel[a.status]}
-                  </span>
-                </td>
-              </tr>
-            ))}
+            {sorted.map((a) => {
+              const overdue = isOverdue(a.dueDate, a.status);
+              return (
+                <tr
+                  key={a.id}
+                  onClick={() => router.push(`/assignment/${a.id}`)}
+                  className={`border-t border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${
+                    overdue ? "bg-red-50" : ""
+                  }`}
+                >
+                  <td className="pl-4 pr-2 py-3" onClick={(e) => e.stopPropagation()}>
+                    <input
+                      type="checkbox"
+                      checked={a.status === "done"}
+                      onChange={(e) => toggleDone(e, a)}
+                      className="h-4 w-4 rounded border-gray-300 accent-gray-800 cursor-pointer"
+                    />
+                  </td>
+                  <td className={`px-3 py-3 font-medium ${a.status === "done" ? "line-through text-gray-400" : ""}`}>
+                    {a.title}
+                  </td>
+                  <td className="px-3 py-3 text-gray-600">{a.course}</td>
+                  <td className={`px-3 py-3 ${overdue ? "text-red-600 font-medium" : dueDateColor(a.dueDate)}`}>
+                    {overdue ? "Overdue" : formatDate(a.dueDate)}
+                  </td>
+                  <td className="px-3 py-3">
+                    {overdue ? (
+                      <span className="inline-block px-2 py-0.5 rounded text-base font-bold bg-red-100 text-red-700 leading-5">
+                        &infin;
+                      </span>
+                    ) : (
+                      <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${priorityBadge[a.priority]}`}>
+                        {a.priority}
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-3 py-3">
+                    <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${statusBadge[a.status]}`}>
+                      {statusLabel[a.status]}
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

@@ -2,7 +2,7 @@
 
 import { use } from "react";
 import { useRouter } from "next/navigation";
-import { useAssignments } from "../../context/AssignmentContext";
+import { useAssignments, isOverdue } from "../../context/AssignmentContext";
 
 function formatDate(dateStr) {
   return new Date(dateStr + "T00:00:00").toLocaleDateString("en-US", {
@@ -51,6 +51,7 @@ export default function AssignmentDetail({ params }) {
   }
 
   const isDone = assignment.status === "done";
+  const overdue = isOverdue(assignment.dueDate, assignment.status);
 
   function toggleDone() {
     updateAssignment(id, { status: isDone ? "todo" : "done" });
@@ -71,14 +72,22 @@ export default function AssignmentDetail({ params }) {
       <div className="border border-gray-200 rounded-lg divide-y divide-gray-100">
         <div className="flex items-center justify-between px-5 py-3">
           <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</span>
-          <span className="text-sm">{formatDate(assignment.dueDate)}</span>
+          <span className={`text-sm ${overdue ? "text-red-600 font-medium" : ""}`}>
+            {overdue ? "Overdue" : formatDate(assignment.dueDate)}
+          </span>
         </div>
 
         <div className="flex items-center justify-between px-5 py-3">
           <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</span>
-          <span className={`px-2 py-0.5 rounded text-xs font-medium ${priorityBadge[assignment.priority]}`}>
-            {assignment.priority}
-          </span>
+          {overdue ? (
+            <span className="px-2 py-0.5 rounded text-base font-bold bg-red-100 text-red-700 leading-5">
+              &infin;
+            </span>
+          ) : (
+            <span className={`px-2 py-0.5 rounded text-xs font-medium ${priorityBadge[assignment.priority]}`}>
+              {assignment.priority}
+            </span>
+          )}
         </div>
 
         <div className="flex items-center justify-between px-5 py-3">

@@ -4,12 +4,21 @@ import { createContext, useContext, useState } from "react";
 
 const AssignmentContext = createContext();
 
+export function isOverdue(dueDate, status) {
+  if (status === "done") return false;
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const due = new Date(dueDate + "T00:00:00");
+  return due < now;
+}
+
 export function calcPriority(dueDate) {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
   const due = new Date(dueDate + "T00:00:00");
   const days = Math.ceil((due - now) / (1000 * 60 * 60 * 24));
 
+  if (days < 0) return "high";
   if (days <= 1) return "high";
   if (days <= 3) return "medium";
   return "low";
@@ -44,6 +53,26 @@ const sampleAssignments = [
     description:
       "Solve problems on dynamic programming and graph algorithms. Provide proofs of correctness and runtime analysis.",
     priority: "low",
+    status: "todo",
+  },
+  {
+    id: "5",
+    course: "MPCS 52553",
+    title: "Cloud Computing Docker Lab",
+    dueDate: "2026-04-09",
+    description:
+      "Containerize a multi-service application using Docker Compose and deploy to a Kubernetes cluster. Submit screenshots and config files.",
+    priority: "high",
+    status: "todo",
+  },
+  {
+    id: "6",
+    course: "MPCS 51050",
+    title: "OOP Midterm Code Review",
+    dueDate: "2026-04-05",
+    description:
+      "Submit a peer code review for the midterm project. Provide detailed feedback on design patterns, SOLID principles, and test coverage.",
+    priority: "high",
     status: "todo",
   },
   {

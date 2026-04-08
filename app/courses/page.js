@@ -1,6 +1,6 @@
 "use client";
 
-import { useAssignments } from "../context/AssignmentContext";
+import { useAssignments, isOverdue } from "../context/AssignmentContext";
 import { useRouter } from "next/navigation";
 
 function daysUntil(dateStr) {
@@ -88,25 +88,30 @@ export default function Courses() {
               <div className="border border-gray-200 rounded-lg overflow-hidden">
                 <table className="w-full text-sm">
                   <tbody>
-                    {items.map((a) => (
-                      <tr
-                        key={a.id}
-                        onClick={() => router.push(`/assignment/${a.id}`)}
-                        className="border-t first:border-t-0 border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
-                      >
-                        <td className={`px-4 py-3 font-medium ${a.status === "done" ? "line-through text-gray-400" : ""}`}>
-                          {a.title}
-                        </td>
-                        <td className={`px-3 py-3 ${dueDateColor(a.dueDate)}`}>
-                          {formatDate(a.dueDate)}
-                        </td>
-                        <td className="px-3 py-3 text-right">
-                          <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${statusBadge[a.status]}`}>
-                            {statusLabel[a.status]}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
+                    {items.map((a) => {
+                      const overdue = isOverdue(a.dueDate, a.status);
+                      return (
+                        <tr
+                          key={a.id}
+                          onClick={() => router.push(`/assignment/${a.id}`)}
+                          className={`border-t first:border-t-0 border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors ${
+                            overdue ? "bg-red-50" : ""
+                          }`}
+                        >
+                          <td className={`px-4 py-3 font-medium ${a.status === "done" ? "line-through text-gray-400" : ""}`}>
+                            {a.title}
+                          </td>
+                          <td className={`px-3 py-3 ${overdue ? "text-red-600 font-medium" : dueDateColor(a.dueDate)}`}>
+                            {overdue ? "Overdue" : formatDate(a.dueDate)}
+                          </td>
+                          <td className="px-3 py-3 text-right">
+                            <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${statusBadge[a.status]}`}>
+                              {statusLabel[a.status]}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
