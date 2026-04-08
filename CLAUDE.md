@@ -21,7 +21,7 @@ Notion-inspired. Clean white, generous whitespace, minimal borders, table-based 
 - `dueDate`: string (ISO date)
 - `description`: string
 - `priority`: high | medium | low
-- `status`: todo | in-progress | done
+- `status`: todo | done
 
 ## Sample Data
 

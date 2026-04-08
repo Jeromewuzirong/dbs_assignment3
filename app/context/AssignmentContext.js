@@ -24,7 +24,7 @@ const sampleAssignments = [
     description:
       "Build an end-to-end data pipeline using Apache Spark to process and analyze a large dataset. Submit code, report, and presentation slides.",
     priority: "low",
-    status: "in-progress",
+    status: "todo",
   },
   {
     id: "2",

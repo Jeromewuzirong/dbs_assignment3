@@ -33,13 +33,11 @@ const priorityBadge = {
 
 const statusLabel = {
   todo: "To do",
-  "in-progress": "In progress",
   done: "Done",
 };
 
 const statusBadge = {
   todo: "bg-gray-100 text-gray-600",
-  "in-progress": "bg-blue-50 text-blue-700",
   done: "bg-green-50 text-green-700",
 };
 
