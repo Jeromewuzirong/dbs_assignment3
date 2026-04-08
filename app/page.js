@@ -26,9 +26,9 @@ function formatDate(dateStr) {
 }
 
 const priorityBadge = {
-  high: "bg-red-50 text-red-700",
-  medium: "bg-amber-50 text-amber-700",
-  low: "bg-gray-100 text-gray-600",
+  high: "bg-red-100 text-red-700",
+  medium: "bg-amber-100 text-amber-700",
+  low: "bg-green-50 text-green-700",
 };
 
 const statusLabel = {
@@ -47,9 +47,12 @@ export default function Home() {
   const { assignments, updateAssignment } = useAssignments();
   const router = useRouter();
 
-  const sorted = [...assignments].sort(
-    (a, b) => new Date(a.dueDate) - new Date(b.dueDate)
-  );
+  const sorted = [...assignments].sort((a, b) => {
+    const aDone = a.status === "done" ? 1 : 0;
+    const bDone = b.status === "done" ? 1 : 0;
+    if (aDone !== bDone) return aDone - bDone;
+    return new Date(a.dueDate) - new Date(b.dueDate);
+  });
 
   const urgentCount = assignments.filter(
     (a) => daysUntil(a.dueDate) <= 3 && a.status !== "done"
@@ -75,7 +78,15 @@ export default function Home() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-1">All Assignments</h1>
+      <div className="flex items-center justify-between mb-1">
+        <h1 className="text-2xl font-bold">All Assignments</h1>
+        <button
+          onClick={() => router.push("/add")}
+          className="mt-2 px-4 py-1.5 text-base bg-gray-900 text-white rounded-md hover:bg-gray-800 cursor-pointer transition-colors"
+        >
+          + Add
+        </button>
+      </div>
       <p className="text-sm text-gray-500 mb-6">
         {assignments.length} assignment{assignments.length !== 1 && "s"}
         {urgentCount > 0 && (
@@ -104,7 +115,7 @@ export default function Home() {
                 onClick={() => router.push(`/assignment/${a.id}`)}
                 className="border-t border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
               >
-                <td className="pl-4 pr-2 py-3">
+                <td className="pl-4 pr-2 py-3" onClick={(e) => e.stopPropagation()}>
                   <input
                     type="checkbox"
                     checked={a.status === "done"}

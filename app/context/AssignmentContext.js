@@ -4,6 +4,17 @@ import { createContext, useContext, useState } from "react";
 
 const AssignmentContext = createContext();
 
+export function calcPriority(dueDate) {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const due = new Date(dueDate + "T00:00:00");
+  const days = Math.ceil((due - now) / (1000 * 60 * 60 * 24));
+
+  if (days <= 1) return "high";
+  if (days <= 3) return "medium";
+  return "low";
+}
+
 const sampleAssignments = [
   {
     id: "1",
@@ -12,7 +23,7 @@ const sampleAssignments = [
     dueDate: "2026-04-15",
     description:
       "Build an end-to-end data pipeline using Apache Spark to process and analyze a large dataset. Submit code, report, and presentation slides.",
-    priority: "high",
+    priority: "low",
     status: "in-progress",
   },
   {
@@ -22,7 +33,7 @@ const sampleAssignments = [
     dueDate: "2026-04-12",
     description:
       "Implement the Observer and Strategy patterns in a simulated trading system. Include UML diagrams and unit tests.",
-    priority: "high",
+    priority: "medium",
     status: "todo",
   },
   {
@@ -32,7 +43,7 @@ const sampleAssignments = [
     dueDate: "2026-04-20",
     description:
       "Solve problems on dynamic programming and graph algorithms. Provide proofs of correctness and runtime analysis.",
-    priority: "medium",
+    priority: "low",
     status: "todo",
   },
   {
@@ -42,7 +53,7 @@ const sampleAssignments = [
     dueDate: "2026-04-10",
     description:
       "Write a 2-page response to the MapReduce paper. Discuss trade-offs and modern alternatives.",
-    priority: "low",
+    priority: "medium",
     status: "done",
   },
 ];
@@ -51,9 +62,10 @@ export function AssignmentProvider({ children }) {
   const [assignments, setAssignments] = useState(sampleAssignments);
 
   function addAssignment(assignment) {
+    const priority = calcPriority(assignment.dueDate);
     setAssignments((prev) => [
       ...prev,
-      { ...assignment, id: Date.now().toString() },
+      { ...assignment, priority, status: "todo", id: Date.now().toString() },
     ]);
   }
 
