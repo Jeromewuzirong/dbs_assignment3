@@ -30,7 +30,7 @@ const statusLabel = {
 };
 
 const statusBadge = {
-  todo: "bg-gray-100 text-gray-600",
+  todo: "bg-blue-50 text-blue-700",
   done: "bg-green-50 text-green-700",
 };
 

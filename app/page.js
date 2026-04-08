@@ -37,7 +37,7 @@ const statusLabel = {
 };
 
 const statusBadge = {
-  todo: "bg-gray-100 text-gray-600",
+  todo: "bg-blue-50 text-blue-700",
   done: "bg-green-50 text-green-700",
 };
 
@@ -131,12 +131,14 @@ export default function Home() {
                   <td className={`px-3 py-3 font-medium ${a.status === "done" ? "line-through text-gray-400" : ""}`}>
                     {a.title}
                   </td>
-                  <td className="px-3 py-3 text-gray-600">{a.course}</td>
-                  <td className={`px-3 py-3 ${overdue ? "text-red-600 font-medium" : dueDateColor(a.dueDate)}`}>
+                  <td className={`px-3 py-3 ${a.status === "done" ? "text-gray-400" : "text-gray-600"}`}>{a.course}</td>
+                  <td className={`px-3 py-3 ${a.status === "done" ? "text-gray-400" : overdue ? "text-red-600 font-medium" : dueDateColor(a.dueDate)}`}>
                     {overdue ? "Overdue" : formatDate(a.dueDate)}
                   </td>
                   <td className="px-3 py-3">
-                    {overdue ? (
+                    {a.status === "done" ? (
+                      <span className="text-gray-400">&mdash;</span>
+                    ) : overdue ? (
                       <span className="inline-block px-2 py-0.5 rounded text-base font-bold bg-red-100 text-red-700 leading-5">
                         &infin;
                       </span>
@@ -147,7 +149,9 @@ export default function Home() {
                     )}
                   </td>
                   <td className="px-3 py-3">
-                    <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${statusBadge[a.status]}`}>
+                    <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
+                      statusBadge[a.status]
+                    }`}>
                       {statusLabel[a.status]}
                     </span>
                   </td>
