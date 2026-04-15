@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "./Nav";
@@ -25,12 +26,14 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <AssignmentProvider>
-          <Nav />
-          <main className="flex-1 max-w-4xl w-full mx-auto px-6 py-8">
-            {children}
-          </main>
-        </AssignmentProvider>
+        <ClerkProvider>
+          <AssignmentProvider>
+            <Nav />
+            <main className="flex-1 max-w-4xl w-full mx-auto px-6 py-8">
+              {children}
+            </main>
+          </AssignmentProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

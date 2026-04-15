@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { UserButton } from "@clerk/nextjs";
 
 export default function Nav() {
   const pathname = usePathname();
@@ -31,6 +32,9 @@ export default function Nav() {
             {label}
           </Link>
         ))}
+        <div className="ml-auto">
+          <UserButton />
+        </div>
       </div>
     </nav>
   );
