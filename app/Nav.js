@@ -11,6 +11,7 @@ export default function Nav() {
     { href: "/", label: "Home" },
     { href: "/add", label: "Add Assignment" },
     { href: "/courses", label: "Courses" },
+    { href: "/books", label: "Books" },
   ];
 
   return (
