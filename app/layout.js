@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "DDL Tracker",
-  description: "Deadline tracking for UChicago MPCS",
+  description: "A calmer dashboard for tracking coursework, reading, and due dates.",
 };
 
 export default function RootLayout({ children }) {
@@ -25,11 +25,11 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-[var(--background)] text-[var(--foreground)]">
         <ClerkProvider>
           <AssignmentProvider>
             <Nav />
-            <main className="flex-1 max-w-4xl w-full mx-auto px-6 py-8">
+            <main className="flex-1 w-full max-w-5xl mx-auto px-5 py-8 sm:px-6 lg:px-8">
               {children}
             </main>
           </AssignmentProvider>
