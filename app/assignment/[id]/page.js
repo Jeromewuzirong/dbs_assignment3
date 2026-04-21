@@ -58,7 +58,7 @@ export default function AssignmentDetail({ params }) {
   }
 
   return (
-    <div className="max-w-2xl">
+    <div>
       <button
         onClick={() => router.push("/")}
         className="text-sm text-gray-500 hover:text-gray-900 transition-colors mb-6 inline-block cursor-pointer"

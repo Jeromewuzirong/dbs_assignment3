@@ -8,7 +8,6 @@ export default function Nav() {
   const pathname = usePathname();
 
   const links = [
-    { href: "/", label: "Home" },
     { href: "/add", label: "Add Assignment" },
     { href: "/courses", label: "Courses" },
     { href: "/books", label: "Books" },
